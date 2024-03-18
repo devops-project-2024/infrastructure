@@ -38,6 +38,27 @@ output "docker_server_public_ip" {
   value       = module.docker-server.public_ips # Ensure your module outputs this attribute
 }
 
+
+output "Jenkins_server_private_ip" {
+  description = "Private IP addresses of Kubernetes master instances"
+  value       = module.jenkins-docker.private_ips # Ensure your module outputs this attribute
+}
+
+output "Jenkins_server_public_ip" {
+  description = "Public IP addresses of Kubernetes master instances"
+  value       = module.jenkins-docker.public_ips # Ensure your module outputs this attribute
+}
+
+output "Bastion_server_private_ip" {
+  description = "Private IP addresses of Kubernetes slave instances"
+  value       = module.bastion-server.private_ips # Ensure your module outputs this attribute
+}
+
+output "Bastion_server_public_ip" {
+  description = "Public IP addresses of Kubernetes slave instances"
+  value       = module.bastion-server.public_ips # Ensure your module outputs this attribute
+}
+
 output "security_group_kubernetes" {
   description = "The ID of the Kubernetes security group"
   value       = module.sg.kubernetes_sg_id
@@ -53,5 +74,9 @@ output "security_group_docker" {
   value       = module.sg.docker_sg_id
 }
 
+output "security_group_bastion" {
+  description = "The ID of the Docker security group"
+  value       = module.sg.bastion_sg_id
+}
 
 

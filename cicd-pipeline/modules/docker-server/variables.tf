@@ -11,7 +11,7 @@ variable "subnets" {
 variable "mykey" {
     description = "Key pair"
     type = string
-    default = "acloud-key.pem"
+    default = "acloud-key"
 }
 
 variable "instance_type" {

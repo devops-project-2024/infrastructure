@@ -13,6 +13,11 @@ variable "docker-sg" {
     description = "sec_grp"
 }
 
+variable "bastion-sg" {
+    type = string
+    description = "sec_grp"
+}
+
 variable "server-ports" {
   type = list(number)
   description = "server-sg-gr-inbound-rules"

@@ -1,0 +1,85 @@
+---
+- name: Initialize Kubernetes Master Node
+  hosts: master
+  become: yes
+  vars:
+    pod_network_cidr: "10.244.0.0/16"
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+      notify:
+        - Set Docker permissions
+
+    - name: Install required dependencies for Kubernetes
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+
+    - name: Ensure /etc/apt/keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Kubernetes GPG Key
+      ansible.builtin.apt_key:
+        url: https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key
+        state: present
+
+    - name: Add Kubernetes repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
+        state: present
+
+    - name: Update package list and install Kubernetes components
+      apt:
+        name:
+          - kubeadm=1.28.1-1.1
+          - kubelet=1.28.1-1.1
+          - kubectl=1.28.1-1.1
+        state: present
+        update_cache: yes
+
+    - name: Initialize the Kubernetes cluster
+      shell: kubeadm init --pod-network-cidr={{ pod_network_cidr }}
+      args:
+        creates: /etc/kubernetes/admin.conf
+
+    - name: Create .kube directory
+      file:
+        path: "$HOME/.kube"
+        state: directory
+        mode: 0755
+
+    - name: Copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "$HOME/.kube/config"
+        remote_src: yes
+
+    - name: Get kubeadm join command
+      shell: kubeadm token create --print-join-command
+      register: join_command
+
+    - name: Save join command to local file
+      delegate_to: localhost
+      copy:
+        content: "{{ join_command.stdout }}"
+        dest: "./join_command.sh"
+        mode: 0755
+
+  handlers:
+    - name: Set Docker permissions
+      file:
+        path: /var/run/docker.sock
+        mode: '0666'

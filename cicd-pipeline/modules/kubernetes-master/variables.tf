@@ -11,7 +11,7 @@ variable "subnets" {
 variable "mykey" {
     description = "Key pair"
     type = string
-    default = "acloud-key.pem"
+    default = "acloud-key"
 }
 
 variable "instance_type" {
@@ -21,9 +21,8 @@ variable "instance_type" {
 }
 
 variable "instance_name" {
-    description = "Instance names"
-    type = string
-    default = "k8s-master"
+  type    = string
+  default = "k8s-master"
 }
 
 variable "amazon_ami" {

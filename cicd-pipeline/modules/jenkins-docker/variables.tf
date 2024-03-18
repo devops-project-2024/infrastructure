@@ -1,4 +1,4 @@
-variable "kubernetes_sg" {
+variable "docker_sg" {
   description = "SG ID for EC2"
   type = string
 }
@@ -21,9 +21,8 @@ variable "instance_type" {
 }
 
 variable "instance_name" {
-    description = "Instance names"
-    type = list(string)
-    default = ["k8s-slave-1", "k8s-slave-2"]
+  type    = string
+  default = "Jenkins-docker"
 }
 
 variable "amazon_ami" {

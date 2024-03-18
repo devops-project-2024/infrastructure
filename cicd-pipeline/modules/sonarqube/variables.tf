@@ -16,7 +16,7 @@ variable "ec2_names" {
 variable "mykey" {
     description = "Key pair"
     type = string
-    default = "acloud-key.pem"
+    default = "acloud-key"
 }
 
 variable "amazon_ami" {

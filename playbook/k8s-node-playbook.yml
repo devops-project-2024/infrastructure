@@ -1,0 +1,56 @@
+---
+- name: Setup Kubernetes Worker Nodes
+  hosts: workers
+  become: yes
+
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: latest
+      notify:
+        - Set Docker permissions
+
+    - name: Install required dependencies for Kubernetes
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: latest
+
+    - name: Ensure /etc/apt/keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Kubernetes GPG Key
+      ansible.builtin.apt_key:
+        url: https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key
+        state: present
+
+    - name: Add Kubernetes repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
+        state: present
+
+    - name: Update package list and install Kubernetes components
+      apt:
+        name:
+          - kubeadm=1.28.1-1.1
+          - kubelet=1.28.1-1.1
+          - kubectl=1.28.1-1.1
+        state: present
+        update_cache: yes
+
+  handlers:
+    - name: Set Docker permissions
+      file:
+        path: /var/run/docker.sock
+        mode: '0666'

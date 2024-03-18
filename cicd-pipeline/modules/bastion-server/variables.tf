@@ -1,17 +1,11 @@
-variable "kubernetes_sg" {
+variable "bastion_sg" {
   description = "SG ID for EC2"
   type = string
 }
 
 variable "subnets" {
-  description = "Subnets for EC2"
-  type = list(string)
-}
-
-variable "mykey" {
-    description = "Key pair"
-    type = string
-    default = "acloud-key"
+  type    = list(string)
+  default = []
 }
 
 variable "instance_type" {
@@ -21,9 +15,15 @@ variable "instance_type" {
 }
 
 variable "instance_name" {
-    description = "Instance names"
-    type = list(string)
-    default = ["k8s-slave-1", "k8s-slave-2"]
+    description = "EC2 names"
+    type = string
+    default = "bastion-server"
+}
+
+variable "mykey" {
+    description = "Key pair"
+    type = string
+    default = "acloud-key"
 }
 
 variable "amazon_ami" {

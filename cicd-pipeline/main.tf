@@ -10,6 +10,7 @@ module "sg" {
   kubernetes-sg = "some-value" # Replace "some-value" with the actual value if needed
   jenkins-sg    = "some-value" # Replace "some-value" with the actual value if needed
   docker-sg     = "some-value" # Replace "some-value" with the actual value if needed
+  bastion-sg    = "some-value" # Replace "some-value" with the actual value if needed
   server-ports  = var.server-ports
 }
 
@@ -29,4 +30,16 @@ module "docker-server" {
   source    = "./modules/docker-server"
   docker_sg = module.sg.docker_sg_id # Correct output reference
   subnets   = module.vpc.subnet_ids
+}
+
+module "jenkins-docker" {
+  source    = "./modules/jenkins-docker"
+  docker_sg = module.sg.docker_sg_id # Correct output reference
+  subnets   = module.vpc.subnet_ids
+}
+
+module "bastion-server" {
+  source     = "./modules/bastion-server"
+  bastion_sg = module.sg.bastion_sg_id # Correct output reference
+  subnets    = module.vpc.subnet_ids
 }

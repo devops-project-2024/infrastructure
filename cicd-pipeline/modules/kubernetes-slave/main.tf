@@ -10,6 +10,6 @@ resource "aws_instance" "kubernetes-slave" {
     # user_data = filebase64("./userdata/install-k8s-slave.sh")
   
   tags = {
-    Name = var.instance_name
+    Name = var.instance_name[count.index]
   }
 }
