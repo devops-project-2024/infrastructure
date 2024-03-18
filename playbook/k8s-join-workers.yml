@@ -1,0 +1,19 @@
+---
+- name: Join Kubernetes Worker Nodes to the Cluster
+  hosts: workers
+  become: yes
+
+  tasks:
+    - name: Copy join command script to worker nodes
+      copy:
+        src: ./join_command.sh
+        dest: /tmp/join_command.sh
+        mode: 0755
+
+    - name: Execute the join command script on worker nodes
+      command: sh /tmp/join_command.sh
+      register: join_output
+
+    - name: Check output of join command
+      debug:
+        msg: "{{ join_output.stdout }}"

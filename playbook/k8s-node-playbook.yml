@@ -11,7 +11,7 @@
     - name: Install Docker
       apt:
         name: docker.io
-        state: latest
+        state: present
       notify:
         - Set Docker permissions
 
@@ -22,7 +22,7 @@
           - ca-certificates
           - curl
           - gnupg
-        state: latest
+        state: present
 
     - name: Ensure /etc/apt/keyrings directory exists
       file:
@@ -31,23 +31,27 @@
         mode: '0755'
 
     - name: Add Kubernetes GPG Key
-      ansible.builtin.apt_key:
-        url: https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key
-        state: present
+      ansible.builtin.shell:
+        cmd: |
+          curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
     - name: Add Kubernetes repository
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
-        state: present
+      ansible.builtin.lineinfile:
+        path: /etc/apt/sources.list.d/kubernetes.list
+        line: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
+        create: yes
 
-    - name: Update package list and install Kubernetes components
+    - name: Update package list after adding Kubernetes repository
+      apt:
+        update_cache: yes
+
+    - name: Install Kubernetes components
       apt:
         name:
           - kubeadm=1.28.1-1.1
           - kubelet=1.28.1-1.1
           - kubectl=1.28.1-1.1
         state: present
-        update_cache: yes
 
   handlers:
     - name: Set Docker permissions

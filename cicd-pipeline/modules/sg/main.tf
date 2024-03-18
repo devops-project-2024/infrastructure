@@ -100,7 +100,7 @@ resource "aws_security_group" "kubernetes_sg" {
   description = "Allow HTTP, SSH, Kubernetes NodePort inbound traffic"
   vpc_id      = var.vpc_id
 
-  ingress {
+ingress {
     description = "SSH"
     from_port   = 22
     to_port     = 22
@@ -120,6 +120,14 @@ resource "aws_security_group" "kubernetes_sg" {
     description = "HTTPS"
     from_port   = 443
     to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
+    description = "HTTPS"
+    from_port   = 6443
+    to_port     = 6443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

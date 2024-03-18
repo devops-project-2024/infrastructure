@@ -62,6 +62,23 @@ set_timezone_to_ny() {
     sudo timedatectl set-timezone America/New_York
 }
 
+# Cleanup functions
+cleanup_aws_cli() {
+    echo "Cleaning up AWS CLI installer files..."
+    rm -rf awscliv2.zip aws/
+}
+
+cleanup_terraform() {
+    echo "Cleaning up Terraform installer files..."
+    rm -rf terraform_1.0.0_linux_amd64.zip
+}
+
+cleanup_kubectl() {
+    echo "Cleaning up kubectl installer files..."
+    # Since kubectl is moved, no files remain to clean up.
+}
+
+
 main() {
     update_system
     install_utilities
