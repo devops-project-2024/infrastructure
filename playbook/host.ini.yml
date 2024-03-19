@@ -1,16 +1,16 @@
 [master]
-k8s-master ansible_host=10.0.1.180 ansible_ssh_private_key_file
+k8s-master ansible_host=10.0.1.180
 
 [workers]
-k8s-worker1 ansible_host=10.0.1.104 ansible_ssh_private_key_file
-k8s-worker2 ansible_host=10.0.1.12 ansible_ssh_private_key_file
+k8s-worker1 ansible_host=10.0.1.104
+k8s-worker2 ansible_host=10.0.1.12 
 
 [docker]
-docker-nexus ansible_host=10.0.1.77 ansible_ssh_private_key_file
-docker-nexus ansible_host=10.0.2.71 ansible_ssh_private_key_file
+docker-nexus ansible_host=10.0.1.77 
+docker-nexus ansible_host=10.0.2.71 
 
 [jenkins]
-jenkins-server ansible_host=10.0.1.174 ansible_ssh_private_key_file
+jenkins-server ansible_host=10.0.1.174 
 
 
 [all:vars]
