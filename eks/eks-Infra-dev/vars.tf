@@ -14,15 +14,3 @@ variable "region" {
   default     = "us-east-1"
   description = "Dev Region"
 }
-
-# variable "access_key" {
-#   type        = string
-#   default     = ""
-#   description = "Access key"
-# }
-
-# variable "secret_key" {
-#   type        = string
-#   default     = ""
-#   description = "Secret key"
-# }
