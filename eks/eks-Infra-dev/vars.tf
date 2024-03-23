@@ -23,6 +23,6 @@ variable "access_key" {
 
 variable "secret_key" {
   type        = string
-  default     = "cd "
+  default     = ""
   description = "Secret key"
 }
