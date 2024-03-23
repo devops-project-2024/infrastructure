@@ -15,14 +15,14 @@ variable "region" {
   description = "Dev Region"
 }
 
-variable "access_key" {
-  type        = string
-  default     = ""
-  description = "Access key"
-}
+# variable "access_key" {
+#   type        = string
+#   default     = ""
+#   description = "Access key"
+# }
 
-variable "secret_key" {
-  type        = string
-  default     = ""
-  description = "Secret key"
-}
+# variable "secret_key" {
+#   type        = string
+#   default     = ""
+#   description = "Secret key"
+# }
