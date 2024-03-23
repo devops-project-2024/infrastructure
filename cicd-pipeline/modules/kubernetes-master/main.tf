@@ -6,7 +6,7 @@ resource "aws_instance" "kubernetes-master" {
   vpc_security_group_ids      = [var.kubernetes_sg]
   subnet_id                   = var.subnets[0]
   availability_zone           = element(data.aws_availability_zones.available.names, 0)
-  # user_data = filebase64("./userdata/install-k8s-master.sh")
+  user_data = filebase64("./userdata/k8s-all-nodes.sh")
 
   tags = {
     Name = var.instance_name

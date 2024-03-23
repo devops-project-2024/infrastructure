@@ -14,17 +14,17 @@ module "sg" {
   server-ports  = var.server-ports
 }
 
-module "kubernetes-master" {
-  source        = "./modules/kubernetes-master"
-  kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
-  subnets       = module.vpc.subnet_ids
-}
+# module "kubernetes-master" {
+#   source        = "./modules/kubernetes-master"
+#   kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
+#   subnets       = module.vpc.subnet_ids
+# }
 
-module "kubernetes-slave" {
-  source        = "./modules/kubernetes-slave"
-  kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
-  subnets       = module.vpc.subnet_ids
-}
+# module "kubernetes-slave" {
+#   source        = "./modules/kubernetes-slave"
+#   kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
+#   subnets       = module.vpc.subnet_ids
+# }
 
 module "docker-server" {
   source    = "./modules/docker-server"

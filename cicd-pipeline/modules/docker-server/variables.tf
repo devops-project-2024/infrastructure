@@ -22,8 +22,8 @@ variable "instance_type" {
 
 variable "instance_name" {
     description = "EC2 names"
-    type = list(string)
-    default = ["docker-nexus", "docker-sonarqube"]
+    type = string
+    default = "docker-server"
 }
 
 variable "amazon_ami" {

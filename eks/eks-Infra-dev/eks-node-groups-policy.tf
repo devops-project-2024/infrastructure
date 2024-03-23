@@ -50,9 +50,9 @@ resource "aws_eks_node_group" "eks-nodes-general" {
 
   ami_type             = "AL2_x86_64"
   capacity_type        = "ON_DEMAND"
-  disk_size            = 20
+  disk_size            = 10
   force_update_version = false
-  instance_types       = ["t3a.small"]
+  instance_types       = ["t2.medium"]
 
   labels = {
     role = "eks-nodes"

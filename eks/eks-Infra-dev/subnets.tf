@@ -3,9 +3,9 @@ resource "aws_subnet" "eks-vpc-pub-sub1" {
   cidr_block = "10.13.0.0/20"
 
   tags = {
-    Name                        = "eks-${var.env}-pub-${var.region}a-sub1"
+    Name                                           = "eks-${var.env}-pub-${var.region}a-sub1"
     "kubernetes.io/cluster/eks-${var.env}-cluster" = "shared"
-    "kubernetes.io/role/elb"    = 1
+    "kubernetes.io/role/elb"                       = 1
   }
 
   availability_zone       = "${var.region}a"
@@ -17,9 +17,9 @@ resource "aws_subnet" "eks-vpc-pub-sub2" {
   cidr_block = "10.13.16.0/20"
 
   tags = {
-    Name                        = "eks-${var.env}-pub-${var.region}b-sub2"
+    Name                                           = "eks-${var.env}-pub-${var.region}b-sub2"
     "kubernetes.io/cluster/eks-${var.env}-cluster" = "shared"
-    "kubernetes.io/role/elb"    = 1
+    "kubernetes.io/role/elb"                       = 1
   }
 
   availability_zone       = "${var.region}b"
@@ -31,12 +31,12 @@ resource "aws_subnet" "eks-vpc-priv-sub1" {
   cidr_block = "10.13.32.0/20"
 
   tags = {
-    Name                              = "eks-${var.env}-priv-${var.region}a-sub1"
+    Name                                           = "eks-${var.env}-priv-${var.region}a-sub1"
     "kubernetes.io/cluster/eks-${var.env}-cluster" = "shared"
-    "kubernetes.io/role/internal-elb" = 1
+    "kubernetes.io/role/internal-elb"              = 1
   }
 
-  availability_zone       = "${var.region}a"
+  availability_zone = "${var.region}a"
 }
 
 resource "aws_subnet" "eks-vpc-priv-sub2" {
@@ -44,10 +44,10 @@ resource "aws_subnet" "eks-vpc-priv-sub2" {
   cidr_block = "10.13.64.0/20"
 
   tags = {
-    Name                              = "eks-${var.env}-priv-${var.region}b-sub2"
+    Name                                           = "eks-${var.env}-priv-${var.region}b-sub2"
     "kubernetes.io/cluster/eks-${var.env}-cluster" = "shared"
-    "kubernetes.io/role/internal-elb" = 1
+    "kubernetes.io/role/internal-elb"              = 1
   }
 
-  availability_zone       = "${var.region}b"
+  availability_zone = "${var.region}b"
 }

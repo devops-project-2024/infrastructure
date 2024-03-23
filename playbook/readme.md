@@ -44,7 +44,7 @@ This document details Ansible playbooks for setting up a Kubernetes cluster, inc
 2. To ping and check connectivity:
 
     ```bash
-    ansible-playbook -i hosts.ini ping.yml
+    ansible-playbook -i host.ini.yml ping.yml -e 'ansible_host_key_checking=False'
     ```
 3.   For the Kubernetes master setup:
 
@@ -81,3 +81,30 @@ Indicate the license governing the use and distribution of these playbooks.
 - Acknowledge individuals or organizations that contributed or inspired these playbooks.
 
 ---
+
+To avoid the SSH authenticity check prompt when connecting to hosts for the first time using Ansible, you can disable the SSH host key checking. This can be done by setting the `ANSIBLE_HOST_KEY_CHECKING` environment variable to `False` before running your Ansible playbook. However, be aware that this reduces security by exposing you to potential man-in-the-middle attacks.
+
+Here’s how you can disable SSH host key checking:
+
+1. **Environment Variable**: Set the `ANSIBLE_HOST_KEY_CHECKING` variable in your shell environment.
+
+   ```bash
+   export ANSIBLE_HOST_KEY_CHECKING=False
+   ```
+
+2. **Ansible Configuration File**: You can also set this in the Ansible configuration file (`ansible.cfg`). Under the `[defaults]` section, add:
+
+   ```ini
+   [defaults]
+   host_key_checking = False
+   ```
+
+   Place this `ansible.cfg` file in your project directory or home directory, and Ansible will pick it up.
+
+3. **Command Line**: Alternatively, you can run your playbook with the `-e` flag to set the environment variable only for the current execution:
+
+   ```bash
+   ansible-playbook k.yml -e 'ansible_host_key_checking=False'
+   ```
+
+By using one of these methods, Ansible will skip the host key check and will not prompt you to verify the host's authenticity. This is particularly useful in automated environments, but ensure you understand the security implications of doing so in your specific context.
