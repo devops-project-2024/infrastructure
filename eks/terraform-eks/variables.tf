@@ -1,0 +1,10 @@
+variable "kubernetes_version" {}
+variable "vpc_cidr" {}
+variable "vpc_name" {}
+variable "aws_region" {}
+variable "access_key" {}
+variable "secret_key" {}
+variable "pub_subnet_1" {}
+variable "pub_subnet_2" {}
+variable "pvt_subnet_1" {}
+variable "pvt_subnet_2" {}
