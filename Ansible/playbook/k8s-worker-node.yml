@@ -1,0 +1,13 @@
+---
+- name: Join nodes to the Kubernetes cluster
+  hosts: nodes
+  become: yes
+  tasks:
+    - name: Fetch kubeadm join command from master
+      command: cat /etc/kubernetes/kubeadm_join_cmd.sh
+      register: kubeadm_join
+      delegate_to: master
+      run_once: true
+
+    - name: Execute kubeadm join on each node
+      shell: "{{ kubeadm_join.stdout }}"

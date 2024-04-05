@@ -8,25 +8,25 @@ output "subnet_ids" {
   value       = module.vpc.subnet_ids
 }
 
-output "kubernetes_master_private_ip" {
-  description = "Private IP addresses of Kubernetes master instances"
-  value       = module.kubernetes-master.private_ips # Ensure your module outputs this attribute
-}
+# output "kubernetes_master_private_ip" {
+#   description = "Private IP addresses of Kubernetes master instances"
+#   value       = module.kubernetes-master.private_ips # Ensure your module outputs this attribute
+# }
 
-output "kubernetes_master_public_ip" {
-  description = "Public IP addresses of Kubernetes master instances"
-  value       = module.kubernetes-master.public_ips # Ensure your module outputs this attribute
-}
+# output "kubernetes_master_public_ip" {
+#   description = "Public IP addresses of Kubernetes master instances"
+#   value       = module.kubernetes-master.public_ips # Ensure your module outputs this attribute
+# }
 
-output "kubernetes_slave_private_ip" {
-  description = "Private IP addresses of Kubernetes slave instances"
-  value       = module.kubernetes-slave.private_ips # Ensure your module outputs this attribute
-}
+# output "kubernetes_slave_private_ip" {
+#   description = "Private IP addresses of Kubernetes slave instances"
+#   value       = module.kubernetes-slave.private_ips # Ensure your module outputs this attribute
+# }
 
-output "kubernetes_slave_public_ip" {
-  description = "Public IP addresses of Kubernetes slave instances"
-  value       = module.kubernetes-slave.public_ips # Ensure your module outputs this attribute
-}
+# output "kubernetes_slave_public_ip" {
+#   description = "Public IP addresses of Kubernetes slave instances"
+#   value       = module.kubernetes-slave.public_ips # Ensure your module outputs this attribute
+# }
 
 output "docker_server_private_ip" {
   description = "Private IP addresses of Docker server instances"
