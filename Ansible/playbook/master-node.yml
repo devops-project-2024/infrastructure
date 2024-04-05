@@ -1,51 +1,26 @@
 ---
-- name: Initialize Kubernetes Cluster with kubeadm
+- name: Initialize Kubernetes Master Node
   hosts: master
   become: yes
   tasks:
-    - name: Initialize the Kubernetes cluster
-      command: kubeadm init
-      register: kubeadm_init
+    - name: initialize K8S cluster
+      shell: kubeadm init --pod-network-cidr=172.16.0.0/16 --apiserver-advertise-address=10.0.0.100
 
-    - name: Ensure .kube directory exists
+    - name: create .kube directory
       file:
-        path: "$HOME/.kube"
+        path: $HOME/.kube
         state: directory
         mode: 0755
 
-    - name: Copy admin.conf to user's kube config
+    - name: copy admin.conf to user kube config
       copy:
-        src: "/etc/kubernetes/admin.conf"
-        dest: "$HOME/.kube/config"
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
         remote_src: yes
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
-        mode: 0644
 
-    - name: Output kubeadm join command to file
-      copy:
-        content: "{{ kubeadm_init.stdout_lines | select('search', 'kubeadm join') | first }}"
-        dest: "/etc/kubernetes/kubeadm_join_cmd.sh"
-        mode: 0755
-
-    - name: Print the kubeadm join command
-      debug:
-        msg: "{{ kubeadm_init.stdout_lines | select('search', 'kubeadm join') | first }}"
-
-- name: Set KUBECONFIG environment variable for the root user
-  hosts: master
-  become: yes
-  tasks:
-    - name: Set KUBECONFIG environment variable
-      lineinfile:
-        path: /root/.bashrc
-        line: 'export KUBECONFIG=/etc/kubernetes/admin.conf'
-        create: yes
-
-- name: Deploy a pod network
-  hosts: master
-  become: yes
-  tasks:
-    - name: Deploy the chosen network solution
-      shell: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-      # Replace [podnetwork].yaml with the actual file for the network plugin
+    - name: install Pod network
+      become: yes
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt
