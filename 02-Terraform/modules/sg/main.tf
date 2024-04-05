@@ -133,6 +133,14 @@ ingress {
   }
 
   ingress {
+    description = "HTTPS"
+    from_port   = 8000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "Kubernetes NodePort Range"
     from_port   = 30000
     to_port     = 32767
