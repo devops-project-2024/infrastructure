@@ -1,6 +1,6 @@
 ---
 - name: Join nodes to the Kubernetes cluster
-  hosts: nodes
+  hosts: workers
   become: yes
   tasks:
     - name: Fetch kubeadm join command from master

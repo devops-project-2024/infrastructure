@@ -1,39 +1,46 @@
 - name: Initialize Kubernetes Cluster with kubeadm
-  hosts: k8s-master
+  hosts: master
   become: yes
+  remote_user: ubuntu
   tasks:
-    - name: Ensure .kube directory exists
+    - name: Ensure .kube directory exists in the ubuntu user's home
       file:
-        path: "$HOME/.kube"
+        path: "/home/ubuntu/.kube"
         state: directory
-        mode: 0755
+        mode: '0755'
+        owner: ubuntu
+        group: ubuntu
 
-    - name: Copy admin.conf to user's kube config
+    - name: Copy admin.conf to the ubuntu user's kube config
       copy:
         src: "/etc/kubernetes/admin.conf"
-        dest: "$HOME/.kube/config"
+        dest: "/home/ubuntu/.kube/config"
         remote_src: yes
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
-        mode: 0644
+        force: yes
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'
 
     - name: Create kubeadm join command if not already done
       command: kubeadm token create --print-join-command
       register: kubeadm_join
       changed_when: false
+      ignore_errors: true
 
     - name: Output kubeadm join command to file
       copy:
         content: "{{ kubeadm_join.stdout }}"
         dest: "/etc/kubernetes/kubeadm_join_cmd.sh"
-        mode: 0755
+        mode: '0755'
+      when: kubeadm_join is defined and kubeadm_join.stdout is defined
 
     - name: Print the kubeadm join command
       debug:
         msg: "{{ kubeadm_join.stdout }}"
+      when: kubeadm_join is defined and kubeadm_join.stdout is defined
 
     - name: Deploy Calico network
       become: yes
       shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
       environment:
-        KUBECONFIG: "/etc/kubernetes/admin.conf"
+        KUBECONFIG: "/home/ubuntu/.kube/config"
