@@ -10,47 +10,61 @@ This document details Ansible playbooks for setting up a Kubernetes cluster, inc
 - Machines (virtual or physical) for Kubernetes configuration
 - SSH access to these machines
 
+## Set Server private keys 
+- **File:** [acloud-key.pem file]
+- **Description:** Ensures connectivity to all servers by adding server key pairs to /tmp file.
+
+## Populate `hosts.ini` with your nodes' IP addresses. 
+- **File:** [Inventory file](host.ini)
+- **Description:** Ensures node private ip address are updated on the host.ini file.
+
 ## Playbook Descriptions
 
-### 1. Kuberntes Common Setup
+### 1. Ping Servers
+- **File:** [ping playbook](./ping.yml)
+- **Description:** Ensures connectivity to all servers in the inventory by sending ping requests.
+
+### 2. Setup Sonarqube on Docker
+- **File:** [Sonarqube docker playbook](./docker-sonarqube.yml)
+- **Description:** Ensures connectivity to all servers in the inventory by sending ping requests.
+
+### 3. Kuberntes Common Setup
 - **File:** [Kubernetes Common Setup](./K8s-all-nodes.yml)
 - **Description:** Installs common prerequisites for all Kubernetes nodes.
 
-### 2. Kubernetes Master Setup
+### 4. Kubernetes Master Setup
 - **File:** [k8s master setup](./k8s-master-node.yml)
 - **Description:** Initializes the Kubernetes master node, sets up the cluster, and deploys network plugin.
 
-### 3. Kubernetes Nodes Setup
-- **File:** [](./k8s-worker-node.yml)
+### 5. Kubernetes Nodes Setup
+- **File:** [k8s worker setup](./k8s-worker-node.yml)
 - **Description:** Joins worker nodes to the Kubernetes cluster with necessary configurations.
 
-### 4. Ping Servers
-- **File:** `ping-servers-playbook.yml`
-- **Description:** Ensures connectivity to all servers in the inventory by sending ping requests.
-
-### 5. Disable Host Key Checking
-- **Purpose:** To avoid manual SSH host key verification prompts during playbook runs.
-- **Method:** Set `ANSIBLE_HOST_KEY_CHECKING=False` in your environment or `ansible.cfg`, or use `-e 'ansible_host_key_checking=False'` with `ansible-playbook` command.
 
 ## Usage
 
-1. Populate `hosts.ini` with your nodes' IP addresses.
 
-2. To ping and check connectivity:
+1. To ping and check connectivity:
 
     ```bash
     ansible-playbook -i host.ini ping.yml -e 'ansible_host_key_checking=False'
     ```
-3.   For the Kubernetes master setup:
+
+2. To install sonarqube on docker server :
 
     ```bash
+    ansible-playbook -i host.ini docker-sonarqube.yml
+    ```
+3.   For the Kubernetes master setup:
+
+    ```
     ansible-playbook -i host.ini k8s-master-node.yml
     ```
 
 4. For the worker nodes setup:
 
     ```bash
-    ansible-playbook -i host.ini k8s-nodes-playbook.yml
+    ansible-playbook -i host.ini k8s-worker-node.yml
     ```
 
 5. Check the cluster with:
@@ -58,22 +72,6 @@ This document details Ansible playbooks for setting up a Kubernetes cluster, inc
     ```bash
     kubectl get nodes
     ```
-
-## Configuration
-
-Modify `group_vars/all.yml` for any playbook-wide settings like Kubernetes version or network configurations.
-
-## Contributing
-
-Contributions are welcome. Submit pull requests or issues through the project's repository.
-
-## License
-
-Indicate the license governing the use and distribution of these playbooks.
-
-## Acknowledgments
-
-- Acknowledge individuals or organizations that contributed or inspired these playbooks.
 
 ---
 

@@ -1,0 +1,26 @@
+---
+- name: Deploy SonarQube using Docker Compose
+  hosts: docker-nexus
+  become: yes
+  tasks:
+    - name: Install Docker SDK for Python
+      ansible.builtin.pip:
+        name: docker
+        state: present
+
+    - name: Ensure the SonarQube directory exists
+      file:
+        path: "/opt/sonarqube"
+        state: directory
+        mode: '0755'
+
+    - name: Copy Docker Compose file for SonarQube
+      copy:
+        src: ../../04-Dockerfiles/Sonarqube/docker-compose.yml
+        dest: /opt/sonarqube/docker-compose.yml
+
+    - name: Start SonarQube using Docker Compose
+      community.docker.docker_compose:
+        project_src: /opt/sonarqube
+        state: present
+
