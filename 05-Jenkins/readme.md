@@ -81,11 +81,7 @@ Once you are done with the above steps, it is better to restart Jenkins.
 http://<ec2-instance-public-ip>:8080/restart
 ```
 
-## Adding Credentials 
 
-Dockerhub 
-Github
-Sonarqube Scanner
 
 
 
