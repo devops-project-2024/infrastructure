@@ -14,10 +14,15 @@ variable "ec2_names" {
     type = string
     default = "Nexus-Server"
 }
-variable "mykey" {
-    description = "Key pair"
-    type = string
-    default = "acloud-key"
+
+# variable "mykey" {
+#     description = "Key pair"
+#     type = string
+#     default = "acloud-key"
+# }
+
+variable "key_name" {
+  type = string
 }
 
 variable "amazon_ami" {

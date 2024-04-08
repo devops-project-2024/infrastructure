@@ -26,7 +26,7 @@ output "kubernetes_slave_private_ip" {
 output "kubernetes_slave_public_ip" {
   description = "Public IP addresses of Kubernetes slave instances"
   value       = module.kubernetes-slave.public_ips # Ensure your module outputs this attribute
- }
+}
 
 output "docker_server_private_ip" {
   description = "Private IP addresses of Docker server instances"
@@ -79,4 +79,6 @@ output "security_group_bastion" {
   value       = module.sg.bastion_sg_id
 }
 
-
+output "created_key_name" {
+  value = module.key_pair.key_name
+}

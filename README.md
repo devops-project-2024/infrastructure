@@ -12,7 +12,8 @@ This step involves executing a shell script that likely sets up a bastion host o
 - Execute the bastion setup script by running:
 
   ```bash
-  sh ~/infrastracture/02-Terraform/pipeline-dev/userdata/bastion-setup.sh
+  cd ~/infrastructure/07-Scripts/userdata/
+  sh bastion-setup.sh
   ```
 
 NB: Ensure that the script `bastion-setup.sh` has executable permissions. If not, you might need to run `chmod +x ~/infrastracture/02-Terraform/pipeline-dev/userdata/bastion-setup.sh` before executing it.
@@ -24,7 +25,7 @@ These steps are for initializing Terraform, creating a plan, and then applying t
 - Change directory to where your Terraform configuration is located:
 
   ```bash
-  cd ~/infrastracture/02-Terraform/pipeline-dev
+  cd ~/infrastructure/02-Terraform/pipeline-dev
   ```
 
 - Initialize Terraform:

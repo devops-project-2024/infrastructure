@@ -34,3 +34,8 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 sudo usermod -aG docker jenkins
 sudo usermod -aG docker ubuntu
 sudo systemctl restart docker
+
+# echo "Jenkins initial admin password: ${jenkins_password_placeholder}" > /home/ubuntu/jenkins-password.txt
+# # Set the file permissions to be readable by the 'ubuntu' user only
+# chmod 600 /home/ubuntu/jenkins-password.txt
+# chown ubuntu:ubuntu /home/ubuntu/jenkins-password.txt

@@ -8,10 +8,15 @@ variable "subnets" {
   type = list(string)
 }
 
-variable "mykey" {
-    description = "Key pair"
-    type = string
-    default = "acloud-key"
+# variable "mykey" {
+#     description = "Key pair"
+#     type = string
+#     default = "acloud-key"
+# }
+
+variable "key_name" {
+  type        = string
+  description = "The name of the SSH key pair to attach to the instance"
 }
 
 variable "instance_type" {
