@@ -1,6 +1,6 @@
 ---
 - name: Deploy SonarQube using Docker Compose
-  hosts: docker-nexus
+  hosts: docker
   become: yes
   tasks:
     - name: Install Docker SDK for Python

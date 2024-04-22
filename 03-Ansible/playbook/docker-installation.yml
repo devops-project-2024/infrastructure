@@ -1,6 +1,6 @@
 ---
 - name: Install Docker on Ubuntu hosts
-  hosts: all
+  hosts: docker
   become: yes
   tasks:
     - name: Download Docker’s official GPG key
@@ -32,4 +32,5 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
+          - pip
         state: latest

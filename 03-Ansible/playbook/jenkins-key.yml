@@ -1,0 +1,13 @@
+---
+- name: Retrieve Jenkins Initial Admin Password
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: Read Jenkins initial admin password
+      slurp:
+        src: "/var/lib/jenkins/secrets/initialAdminPassword"
+      register: initial_password_file
+
+    - name: Decode the initial admin password
+      debug:
+        msg: "Initial Admin Password: {{ (initial_password_file['content'] | b64decode).strip() }}"
