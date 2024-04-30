@@ -38,3 +38,23 @@ variable "subnet_cidr" {
   description = "Subnet CIDRS"
   type        = map(string)
 }
+
+variable "eks_vpc_cidr" {
+  description = "Vpc CIDR"
+  type        = string
+}
+
+variable "eks_public_subnets" {
+  description = "public_subnets CIDR"
+  type        = list(string)
+}
+
+variable "eks_private_subnets" {
+  description = "private_subnets CIDR"
+  type        = list(string)
+}
+
+variable "eks_instance_types" {
+  description = "Node Instances"
+  type        = list(string)
+}

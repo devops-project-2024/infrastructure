@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/unitedcoresystems/crispy-kitchen.git'
+                git branch: 'main', credentialsId: 'github-token', url: 'https://github.com/devops-project-2024/source-code.git'
             }
         }
         stage('2. Maven Build and Test') {
