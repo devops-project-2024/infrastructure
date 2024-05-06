@@ -1,81 +1,66 @@
-# Provisioning Infrastructure 
+# Installing Helm 3 on Amazon EKS
 
-### Step by step guide to provision infrastructure 
+This guide details the steps to install Helm 3, a Kubernetes package manager, which you can use to deploy and manage applications on your Amazon EKS cluster.
 
-Here are the step-by-step instructions to execute the tasks you've outlined:
+## Prerequisites
 
-### 1. Run the Bastion Setup Script
+- An Amazon EKS cluster set up and running. You can create one via the AWS Management Console or using the AWS CLI.
+- AWS CLI installed and configured with access to your AWS account.
+- `kubectl` installed and configured to communicate with your EKS cluster.
 
-This step involves executing a shell script that likely sets up a bastion host or performs initial configurations.
+## Installation Steps
 
-- Open a terminal, ssh into your bastion server.
-- Execute the bastion setup script by running:
+### Step 1: Download Helm
 
-  ```bash
-  cd ~/infrastructure/07-Scripts/userdata/
-  sh bastion-setup.sh
-  ```
+To install Helm, you must first download the latest version of the Helm binary. You can download it from the Helm releases page or use a package manager to install it.
 
-NB: Ensure that the script `bastion-setup.sh` has executable permissions. If not, you might need to run `chmod +x ~/infrastracture/02-Terraform/pipeline-dev/userdata/bastion-setup.sh` before executing it.
 
-### 2. Initialize and Apply Terraform Configuration
+#### Using a Script (Linux or macOS):
+n also use Helm's provided script to install it on 
+You caany Unix-based system:
 
-These steps are for initializing Terraform, creating a plan, and then applying the plan to provision infrastructure.
+```bash
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+```
 
-- Change directory to where your Terraform configuration is located:
+### Step 2: Configure Helm with Your EKS Cluster
 
-  ```bash
-  cd ~/infrastructure/02-Terraform/pipeline-dev
-  ```
+Once Helm is installed, you need to ensure it is configured to interact with your EKS cluster.
 
-- Initialize Terraform:
+1. **Set up your Kubernetes configuration file if not already done**. Typically, when you set up `kubectl` to interact with your EKS cluster, it automatically configures your kubeconfig file (`~/.kube/config`). Helm uses the same configuration file.
 
-  ```bash
-  terraform init
-  ```
+2. **Check the Helm version to ensure it's installed correctly**:
 
-- Create a Terraform plan to see what actions will be performed:
+```bash
+helm version
+```
 
-  ```bash
-  terraform plan
-  ```
+<!-- ### Step 3: Add a Helm Chart Repository
 
-- Apply the Terraform plan to provision the resources, and save the output to a file:
+Helm charts are stored in repositories. Before you can install a chart, you must add a repository. Here's how you can add the official Helm stable charts repository:
 
-  ```bash
-  terraform apply --auto-approve > ~/infra-output.txt
-  ```
+```bash
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+```
 
-### 3. Execute Ansible Playbooks
+### Step 4: Install a Helm Chart
 
-These steps will execute Ansible playbooks to configure and manage your infrastructure.
+As an example, to install the NGINX Ingress controller using Helm, you can run:
 
-- Change directory to where your Ansible playbooks are located:
+```bash
+helm install nginx-ingress stable/nginx-ingress --namespace kube-system --create-namespace
+```
 
-  ```bash
-  cd ~/infrastracture/03-Ansible/playbook
-  ```
+This command installs the NGINX Ingress controller in the `kube-system` namespace. You can adjust the chart parameters according to your specific needs.
 
-- Run the ping playbook to check connectivity to your hosts:
+### Step 5: Verify the Installation
 
-  ```bash
-  ansible-playbook -i host.ini ping.yml > ~/ping-output.txt
-  ```
+To check if the NGINX Ingress controller (or any other installed application) is running:
 
-- Run the playbook to set up Docker and SonarQube:
-
-  ```bash
-  ansible-playbook -i host.ini docker-sonarqube.yml
-  ```
-
-- Deploy the Kubernetes master node:
-
-  ```bash
-  ansible-playbook -i host.ini k8s-master-node.yml
-  ```
-
-- Deploy the Kubernetes worker nodes:
-
-  ```bash
-  ansible-playbook -i host.ini k8s-worker-node.yml
-  ```
+```bash
+kubectl get pods -n kube-system
+```
+ -->

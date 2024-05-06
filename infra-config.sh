@@ -9,3 +9,4 @@ ansible-playbook -i host-pub.ini k8s-master-node.yml
 ansible-playbook -i host-pub.ini k8s-worker-node.yml
 ansible-playbook -i host-pub.ini jenkins-key.yml 
 
+

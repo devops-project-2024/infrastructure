@@ -23,8 +23,12 @@ kubectl create namespace argocd
 
 Create a YAML file named `argocd-basic.yml` to define the Argo CD deployment:
 
+```sh 
+vi argocd-basic.yml
+```
+
 ```yaml
-apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: argocd
@@ -36,6 +40,10 @@ spec: {}
 
 Also, create a YAML file named `argocd-service.yml` for the Argo CD Ingress configuration:
 
+```sh 
+vi argocd-service.yml
+```
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -43,7 +51,7 @@ metadata:
   name: argocd-server-ingress
   namespace: argocd
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx-service
   rules:
   - http:
       paths:
@@ -70,7 +78,11 @@ kubectl apply -f argocd-service.yml -n argocd
 Check the status of the deployed Ingress to ensure it is correctly set up and note any assigned addresses or ports:
 
 ```sh
-kubectl describe ingress argocd-server-ingress -n argocd
+kubectl edit svc argocd-server -n argocd
+```
+
+```sh
+kubectl get svc argocd-server -n argocd
 ```
 
 ### Step 5: Access Argo CD
@@ -83,8 +95,6 @@ kubectl get ingress -n argocd
 
 Use the address provided under the `ADDRESS` column to access the Argo CD UI through your web browser. This address points to the nginx Ingress controller that routes traffic to your Argo CD service.
 
-
-Certainly! Here is a continuation of the README instructions specifically designed for managing and retrieving secrets in an Argo CD environment within your EKS cluster. This section can be appended to your existing README to provide comprehensive guidance on handling secrets securely.
 
 ---
 
@@ -110,12 +120,15 @@ JDJhJDEwJHNBbE1wREN0Lmpqc1NDT0FpZmNpMy5WdnYwblZiNWxOeHJLemlpUnBTZkdSNGpPOFUzRUpx
 
 ```sh
 # Retrieve the secret and decode it
-kubectl get secret <secret-name> -n argocd -o jsonpath="{.data}" | jq 'map_values(@base64d)'
+kubectl get secret -n argocd
 ```
-or 
+and 
 
 ```sh
-# Replace admin.password and decode it
+kubectl edit secret argocd-cluster -n argocd
+```
+
+```sh 
 echo admin.password | base64 -d
 ```
 
@@ -152,11 +165,67 @@ spec:
               key: <key-name>
 ```
 
-### Best Practices for Secret Management
+### Role and Role-binding for argo CD
 
-- **Limit Access**: Use Kubernetes RBAC to control who can access secrets in the `argocd` namespace. Only allow necessary read and/or write permissions.
 
-- **Audit Regularly**: Regularly review and audit secrets and access policies to ensure only current and appropriate accesses are granted.
+1. Create a Role in a file named `argo-role.yaml`:
+   
+   ```sh
+   vi argo-role.yaml
+   ```
 
-- **Use External Secret Management**: For enhanced security, consider integrating Argo CD with external secrets management solutions like HashiCorp Vault, AWS Secrets Manager, or others that provide robust access controls, secret rotation, and audit trails.
+   ```yaml
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: Role
+   metadata:
+     namespace: web-app
+     name: argo-role
+   rules:
+   - apiGroups: [""]
+     resources: ["pods", "deployments", "services"]  # Add other resources as needed
+     verbs: ["get", "list", "watch", "create", "update", "delete"]
+   ```
 
+2. Apply the Role to the `web-app` namespace:
+
+   ```bash
+   kubectl apply -f argo-role.yaml
+   ```
+
+3. Create a RoleBinding in a file named `argo-role-binding.yaml`:
+  
+```sh
+kubectl get serviceaccount -n argocd
+kubectl get rolebindings,clusterrolebindings -n argocd --field-selector metadata.name=argocd-server
+kubectl describe serviceaccount argocd-server -n argocd
+```
+
+  ```sh
+   vi argo-role-binding.yaml
+  ```
+
+   ```yaml
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: RoleBinding
+   metadata:
+     name: argo-role-binding
+     namespace: web-app
+   subjects:
+   - kind: ServiceAccount
+     name: argocd-service-account  # Replace with the actual service account used by ArgoCD
+     namespace: argocd  # Assuming ArgoCD is deployed in the 'argocd' namespace
+   roleRef:
+     kind: Role
+     name: argo-role
+     apiGroup: rbac.authorization.k8s.io
+   ```
+
+4. Apply the RoleBinding to bind the Role to the ArgoCD service account:
+
+   ```bash
+   kubectl apply -f argo-role-binding.yaml
+   ```
+
+Replace `argo-role` and `argo-role-binding` with meaningful names for your RBAC objects, and ensure that you replace `argo-role.yaml` and `argo-role-binding.yaml` with the actual filenames you use.
+
+After applying these RBAC changes, the ArgoCD service account should have the necessary permissions to manage resources in the `web-app` namespace. You can then try syncing again to see if the "Namespace 'web-app' for Deployment 'web-app' is not managed" error is resolved.
