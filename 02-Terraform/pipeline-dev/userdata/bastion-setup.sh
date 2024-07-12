@@ -46,6 +46,14 @@ install_kubectl() {
     sudo mv ./kubectl /usr/local/bin/kubectl
 }
 
+# Function to install helm
+install_helm() {
+    echo "Installing Helm..."
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    chmod 700 get_helm.sh
+    ./get_helm.sh
+}
+
 # Function to install Docker
 install_docker() {
     echo "Installing Docker..."
@@ -86,6 +94,7 @@ main() {
     install_ansible
     install_terraform
     install_kubectl
+    install_helm
     install_docker
     set_timezone_to_ny
     echo "Installation complete."

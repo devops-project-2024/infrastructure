@@ -69,8 +69,8 @@ spec:
 Deploy the Argo CD components to your cluster:
 
 ```sh
-kubectl apply -f argocd-basic.yml -n argocd
-kubectl apply -f argocd-service.yml -n argocd
+kubectl apply -f argocd-basic.yml 
+kubectl apply -f argocd-service.yml 
 ```
 
 ### Step 4: Verify the Deployment
@@ -115,8 +115,6 @@ kubectl get secrets -n argocd
 #### Step 2: Retrieve and Decode Secrets
 
 Select the secret you need to inspect or modify. To view the contents of the secret in a readable format, retrieve it using `kubectl` and decode it from Base64:
-
-JDJhJDEwJHNBbE1wREN0Lmpqc1NDT0FpZmNpMy5WdnYwblZiNWxOeHJLemlpUnBTZkdSNGpPOFUzRUpx
 
 ```sh
 # Retrieve the secret and decode it
@@ -168,31 +166,31 @@ spec:
 ### Role and Role-binding for argo CD
 
 
-1. Create a Role in a file named `argo-role.yaml`:
+1. Create a Role in a file named `argo-role.yml`:
    
    ```sh
-   vi argo-role.yaml
+   vi argo-role.yml
    ```
 
-   ```yaml
-   apiVersion: rbac.authorization.k8s.io/v1
-   kind: Role
-   metadata:
-     namespace: web-app
-     name: argo-role
-   rules:
-   - apiGroups: [""]
-     resources: ["pods", "deployments", "services"]  # Add other resources as needed
-     verbs: ["get", "list", "watch", "create", "update", "delete"]
-   ```
+```yml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: web-app  # Change this to the appropriate namespace
+  name: argo-role     # Name of the Role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "deployments", "services"]  # Add other resources as needed
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+```
 
 2. Apply the Role to the `web-app` namespace:
 
    ```bash
-   kubectl apply -f argo-role.yaml
+   kubectl apply -f argo-role.yml
    ```
 
-3. Create a RoleBinding in a file named `argo-role-binding.yaml`:
+3. Create a RoleBinding in a file named `argo-role-binding.yml`:
   
 ```sh
 kubectl get serviceaccount -n argocd
@@ -201,29 +199,30 @@ kubectl describe serviceaccount argocd-server -n argocd
 ```
 
   ```sh
-   vi argo-role-binding.yaml
+   vi argo-role-binding.yml
   ```
 
    ```yaml
    apiVersion: rbac.authorization.k8s.io/v1
-   kind: RoleBinding
-   metadata:
-     name: argo-role-binding
-     namespace: web-app
-   subjects:
-   - kind: ServiceAccount
-     name: argocd-service-account  # Replace with the actual service account used by ArgoCD
-     namespace: argocd  # Assuming ArgoCD is deployed in the 'argocd' namespace
-   roleRef:
-     kind: Role
-     name: argo-role
-     apiGroup: rbac.authorization.k8s.io
+kind: RoleBinding
+metadata:
+  name: argo-role-binding
+  namespace: web-app
+subjects:
+- kind: ServiceAccount
+  name: argocd-argocd-server   # Replace with the actual service account used by ArgoCD
+  namespace: argocd  # Assuming ArgoCD is deployed in the 'argocd' namespace
+roleRef:
+  kind: Role
+  name: argo-role
+  apiGroup: rbac.authorization.k8s.io
+
    ```
 
 4. Apply the RoleBinding to bind the Role to the ArgoCD service account:
 
    ```bash
-   kubectl apply -f argo-role-binding.yaml
+   kubectl apply -f argo-role-binding.yml
    ```
 
 Replace `argo-role` and `argo-role-binding` with meaningful names for your RBAC objects, and ensure that you replace `argo-role.yaml` and `argo-role-binding.yaml` with the actual filenames you use.

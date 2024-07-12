@@ -3,10 +3,10 @@
   hosts: docker
   become: yes
   tasks:
-    - name: Install Docker SDK for Python
-      ansible.builtin.pip:
-        name: docker
-        state: present
+    # - name: Install Docker SDK for Python
+    #   ansible.builtin.pip:
+    #     name: docker
+    #     state: present
 
     - name: Ensure the SonarQube directory exists
       file:

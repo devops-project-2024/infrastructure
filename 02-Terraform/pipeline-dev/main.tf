@@ -66,21 +66,21 @@ module "sg" {
   server-ports  = var.server-ports
 }
 
-# module "kubernetes-master" {
-#   source        = "./modules/kubernetes-master"
-#   kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
-#   subnets       = module.vpc.subnet_ids
-#   key_name      = module.key_pair.key_name
+module "kubernetes-master" {
+  source        = "./modules/kubernetes-master"
+  kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
+  subnets       = module.vpc.subnet_ids
+  key_name      = module.key_pair.key_name
 
 
-# }
+}
 
-# module "kubernetes-slave" {
-#   source        = "./modules/kubernetes-slave"
-#   kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
-#   subnets       = module.vpc.subnet_ids
-#   key_name      = module.key_pair.key_name
-# }
+module "kubernetes-slave" {
+  source        = "./modules/kubernetes-slave"
+  kubernetes_sg = module.sg.kubernetes_sg_id # Correct output reference
+  subnets       = module.vpc.subnet_ids
+  key_name      = module.key_pair.key_name
+}
 
 module "docker-server" {
   source    = "./modules/docker-server"

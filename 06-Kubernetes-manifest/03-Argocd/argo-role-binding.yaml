@@ -1,13 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+# This cluster role binding allows Service Account to read secrets in any namespace.
+kind: ClusterRoleBinding
 metadata:
-  name: argo-role-binding
-  namespace: web-app
+  name: read-secrets-global
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: secrets-cluster-role # Name of cluster role to be referenced
 subjects:
 - kind: ServiceAccount
-  name: argocd-service-account   # Replace with the actual service account used by ArgoCD
-  namespace: argocd  # Assuming ArgoCD is deployed in the 'argocd' namespace
-roleRef:
-  kind: Role
-  name: argo-role
-  apiGroup: rbac.authorization.k8s.io
+  name: <argocd-instance-service-account-name>
+  namespace: <argocd-instance-namespace>
